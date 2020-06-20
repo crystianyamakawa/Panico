@@ -8,7 +8,7 @@
 
     <EditText
         android:id="@+id/campoTempo"
-        android:layout_width="266dp"
+        android:layout_width="0dp"
         android:layout_height="51dp"
         android:layout_marginTop="36dp"
         android:ems="10"
@@ -21,9 +21,9 @@
 
     <EditText
         android:id="@+id/txMensagem"
-        android:layout_width="266dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="56dp"
+        android:layout_width="0dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="32dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Mensagem"
@@ -36,14 +36,12 @@
         android:id="@+id/txTelefone2"
         android:layout_width="160dp"
         android:layout_height="46dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="52dp"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Telefone 2"
         app:layout_constraintEnd_toStartOf="@+id/checkBoxTel2Ligar"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.65"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txTelefone1" />
 
@@ -51,14 +49,12 @@
         android:id="@+id/txTelefone3"
         android:layout_width="160dp"
         android:layout_height="46dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginLeft="52dp"
         android:layout_marginTop="24dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Telefone 3"
         app:layout_constraintEnd_toStartOf="@+id/checkBoxTel3Ligar"
-        app:layout_constraintHorizontal_bias="0.071"
+        app:layout_constraintHorizontal_bias="0.683"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txTelefone2" />
 
@@ -150,9 +146,9 @@
         android:text="Salvar Configurações"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/campoTempo"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.714" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

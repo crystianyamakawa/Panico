@@ -20,8 +20,8 @@
 
     <EditText
         android:id="@+id/txTelefone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="154dp"
+        android:layout_height="46dp"
         android:layout_marginTop="88dp"
         android:ems="10"
         android:inputType="textPersonName"
@@ -64,19 +64,23 @@
         android:id="@+id/txLatitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="20dp"
         android:text="Latitude"
-        app:layout_constraintTop_toBottomOf="@+id/btGPS"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btGPS" />
 
     <TextView
         android:id="@+id/txLongitude"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
         android:layout_marginTop="12dp"
         android:text="Longitude"
-        app:layout_constraintTop_toBottomOf="@+id/txLatitude"
-        tools:layout_editor_absoluteX="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txLatitude" />
 
     <Button
         android:id="@+id/button"
