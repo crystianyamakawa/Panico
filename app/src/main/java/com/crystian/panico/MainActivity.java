@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +26,7 @@ import com.crystian.panico.model.PanicoConfig;
 public class MainActivity extends AppCompatActivity {
     Button btnGps;
     TextView txtLatitude, txtLongitude;
-    Location minhaLocalizacao;
+    Location minhaLocalizacao ;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         txtLatitude = (TextView) findViewById(R.id.txLatitude);
         txtLongitude = (TextView) findViewById(R.id.txLongitude);
-
+        minhaLocalizacao = new Location("");
         btnGps = (Button) findViewById(R.id.btGPS);
         btnGps.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
@@ -45,14 +46,20 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void EnviaSMS2(View v) {
-        try{
-            EditText telefone = (EditText) findViewById(R.id.txTelefone);
-            SmsManager smgr = SmsManager.getDefault();
-            smgr.sendTextMessage(telefone.getText().toString(),null,"Teste Envio",null,null);
-            Toast.makeText(MainActivity.this, "SMS Sent Successfully", Toast.LENGTH_SHORT).show();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED
+                 ) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 1);
         }
-        catch (Exception e){
-            Toast.makeText(MainActivity.this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
+        else {
+            try {
+                EditText telefone = (EditText) findViewById(R.id.txTelefone);
+                SmsManager smgr = SmsManager.getDefault();
+                smgr.sendTextMessage(telefone.getText().toString(), null, "Teste Envio", null, null);
+                Toast.makeText(MainActivity.this, "SMS Sent Successfully", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(MainActivity.this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -152,10 +159,10 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "tel1:"+config.getTelefone1() + "tel2:"+config.getTelefone2() + "tel3:"+config.getTelefone3(), Toast.LENGTH_LONG).show();
 
         // Habilitar GPS e Pegar Posição
-    //    pedirPermissoes();
+        pedirPermissoes();
 
-       // Double latPoint = minhaLocalizacao.getLatitude();
-       // Double lngPoint = minhaLocalizacao.getLongitude();
+        Double latPoint = minhaLocalizacao.getLatitude();
+        Double lngPoint = minhaLocalizacao.getLongitude();
 
 
         // Enviar SMS

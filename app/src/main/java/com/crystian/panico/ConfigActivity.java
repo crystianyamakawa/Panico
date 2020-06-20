@@ -13,45 +13,28 @@ import com.crystian.panico.model.PanicoConfig;
 
 public class ConfigActivity extends AppCompatActivity {
     private PanicoConfig config;
-    private EditText telefone1 ;
-    private CheckBox telefone1Ligar ;
-    private CheckBox telefone1Sms ;
-
-    private EditText telefone2;
-    private CheckBox telefone2Ligar;
-    private CheckBox telefone2Sms ;
-
-    private EditText telefone3 ;
-    private CheckBox telefone3Ligar ;
-    private CheckBox telefone3Sms ;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
 
-//        config =  PanicoConfig.findById(PanicoConfig.class, 1);
-
-
 
     }
 
-    public void SetCampos(View v){
-        telefone1 = (EditText) findViewById(R.id.txTelefone1);
-        telefone1Ligar = (CheckBox) findViewById(R.id.cbTelefone1Ligar);
-        telefone1Sms = (CheckBox) findViewById(R.id.cbTelefone1Sms);
-
-        telefone2 = (EditText) findViewById(R.id.txTelefone2);
-        telefone2Ligar = (CheckBox) findViewById(R.id.cbTelefone2Ligar);
-        telefone2Sms = (CheckBox) findViewById(R.id.cbTelefone2Sms);
-
-        telefone3 = (EditText) findViewById(R.id.txTelefone2);
-        telefone3Ligar = (CheckBox) findViewById(R.id.cbTelefone2Ligar);
-        telefone3Sms = (CheckBox) findViewById(R.id.cbTelefone2Sms);
-
-    }
         public void GravarConf(View view) {
+        EditText telefone1 = (EditText) findViewById(R.id.txTelefone1);
+        CheckBox telefone1Ligar = (CheckBox) findViewById(R.id.cbTelefone1Ligar);
+        CheckBox telefone1Sms = (CheckBox) findViewById(R.id.cbTelefone1Sms);
 
+        EditText telefone2 = (EditText) findViewById(R.id.txTelefone2);
+        CheckBox telefone2Ligar = (CheckBox) findViewById(R.id.cbTelefone2Ligar);
+        CheckBox telefone2Sms = (CheckBox) findViewById(R.id.cbTelefone2Sms);
+
+        EditText telefone3 = (EditText) findViewById(R.id.txTelefone2);
+        CheckBox telefone3Ligar = (CheckBox) findViewById(R.id.cbTelefone2Ligar);
+        CheckBox telefone3Sms = (CheckBox) findViewById(R.id.cbTelefone2Sms);
+
+        PanicoConfig config =  new PanicoConfig();
         config.setTelefone1(telefone1.getText().toString());
         config.setTelefone1_ligar(telefone1Ligar.isChecked());
         config.setTelefone1_sms(telefone1Sms.isChecked());
