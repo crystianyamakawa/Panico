@@ -7,122 +7,152 @@
     tools:context="com.crystian.panico.ConfigActivity">
 
     <EditText
-        android:id="@+id/txTelefone3"
-        android:layout_width="155dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="15dp"
+        android:id="@+id/campoTempo"
+        android:layout_width="266dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="36dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Telefone 3"
+        android:text="tempo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txTelefone2" />
+        app:layout_constraintTop_toBottomOf="@+id/txMensagem" />
 
-    <CheckBox
-        android:id="@+id/cbTelefone3Sms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="32dp"
-        android:checked="true"
-        android:text="SMS"
-        app:layout_constraintStart_toEndOf="@+id/cbTelefone3Ligar"
-        app:layout_constraintTop_toBottomOf="@+id/cbTelefone2Sms" />
-
-    <CheckBox
-        android:id="@+id/cbTelefone3Ligar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="28dp"
-        android:checked="true"
-        android:text="LIGAR"
-        app:layout_constraintStart_toEndOf="@+id/txTelefone3"
-        app:layout_constraintTop_toBottomOf="@+id/cbTelefone2Ligar" />
+    <EditText
+        android:id="@+id/txMensagem"
+        android:layout_width="266dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="56dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Mensagem"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txTelefone3" />
 
     <EditText
         android:id="@+id/txTelefone2"
-        android:layout_width="157dp"
-        android:layout_height="41dp"
+        android:layout_width="160dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginLeft="52dp"
         android:layout_marginTop="20dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Telefone 2"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxTel2Ligar"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txTelefone1" />
 
-    <CheckBox
-        android:id="@+id/cbTelefone2Sms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="28dp"
-        android:checked="true"
-        android:text="SMS"
-        app:layout_constraintStart_toEndOf="@+id/cbTelefone2Ligar"
-        app:layout_constraintTop_toBottomOf="@+id/cbTelefone1Sms" />
+    <EditText
+        android:id="@+id/txTelefone3"
+        android:layout_width="160dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginLeft="52dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Telefone 3"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxTel3Ligar"
+        app:layout_constraintHorizontal_bias="0.071"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txTelefone2" />
 
     <CheckBox
-        android:id="@+id/cbTelefone2Ligar"
+        android:id="@+id/checkBoxTel3Ligar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Ligar"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxTel3Sms"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxTel2Ligar" />
+
+    <CheckBox
+        android:id="@+id/checkBoxTel2Ligar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:checked="true"
-        android:text="LIGAR"
-        app:layout_constraintStart_toEndOf="@+id/txTelefone2"
-        app:layout_constraintTop_toBottomOf="@+id/cbTelefone1Ligar" />
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:text="Ligar"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxTel2Sms"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxTel1Ligar" />
+
+    <CheckBox
+        android:id="@+id/checkBoxTel2Sms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:text="SMS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxTel1Sms" />
+
+    <CheckBox
+        android:id="@+id/checkBoxTel3Sms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:text="SMS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxTel2Sms" />
 
     <EditText
         android:id="@+id/txTelefone1"
         android:layout_width="160dp"
         android:layout_height="46dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="52dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Telefone 1"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxTel1Ligar"
+        app:layout_constraintHorizontal_bias="0.65"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
-        android:id="@+id/cbTelefone1Ligar"
+        android:id="@+id/checkBoxTel1Ligar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="84dp"
-        android:checked="true"
-        android:text="LIGAR"
-        app:layout_constraintStart_toEndOf="@+id/txTelefone1"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:text="Ligar"
+        app:layout_constraintEnd_toStartOf="@+id/checkBoxTel1Sms"
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
-        android:id="@+id/cbTelefone1Sms"
+        android:id="@+id/checkBoxTel1Sms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="84dp"
-        android:checked="true"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
         android:text="SMS"
-        app:layout_constraintStart_toEndOf="@+id/cbTelefone1Ligar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btSalvarConf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="180dp"
-        android:onClick="GravarConf"
+        android:layout_marginBottom="184dp"
+        android:onClick="gravarConf"
         android:text="Salvar Configurações"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.114"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txTelefone3"
-        app:layout_constraintVertical_bias="0.545" />
+        app:layout_constraintTop_toBottomOf="@+id/campoTempo"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

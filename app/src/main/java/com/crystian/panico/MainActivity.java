@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         String telefone2 = config.getTelefone2();
         String telefone3 = config.getTelefone3();
 
-        String MensagemSMS = "ME AJUDEM!!! - Lat: "  + "latPoint.toString()" + "Log: " +"lngPoint.toString()";
+        String MensagemSMS = "ME AJUDEM!!! - Lat: "  + latPoint.toString() + "Log: " +lngPoint.toString();
         SmsManager smgr = SmsManager.getDefault();
         smgr.sendTextMessage(telefone1,null,MensagemSMS,null,null);
         Toast.makeText(this, "SMS tel1:"+config.getTelefone1(), Toast.LENGTH_LONG).show();
