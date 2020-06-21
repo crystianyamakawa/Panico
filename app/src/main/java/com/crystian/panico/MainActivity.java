@@ -27,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
     Button btnGps;
     TextView txtLatitude, txtLongitude;
     Location minhaLocalizacao ;
+    String telefone1 ;
+    String telefone2 ;
+    String telefone3;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +128,22 @@ public class MainActivity extends AppCompatActivity {
                 public void onLocationChanged(Location location) {
                     atualizar(location);
                     minhaLocalizacao = location;
+
+                    Double latPoint = minhaLocalizacao.getLatitude();
+                    Double lngPoint = minhaLocalizacao.getLongitude();
+
+
+                    String MensagemSMS = "ME AJUDEM!!! - Lat: "  + latPoint.toString() + "Log: " +lngPoint.toString();
+                    SmsManager smgr = SmsManager.getDefault();
+                    smgr.sendTextMessage(telefone1,null,MensagemSMS,null,null);
+                   // Toast.makeText(this, "SMS tel1:"+ telefone1.toString(), Toast.LENGTH_LONG).show();
+                    smgr.sendTextMessage(telefone2,null,MensagemSMS,null,null);
+                   // Toast.makeText(this, "SMS tel2:" + telefone2.toString() , Toast.LENGTH_LONG).show();
+                    smgr.sendTextMessage(telefone3,null,MensagemSMS,null,null);
+                   // Toast.makeText(this, "SMS tel3:"+telefone3.toString() , Toast.LENGTH_LONG).show();
+
+
+
                 }
 
                 public void onStatusChanged(String provider, int status, Bundle extras) { }
@@ -158,26 +178,14 @@ public class MainActivity extends AppCompatActivity {
         PanicoConfig config = PanicoConfig.findById(PanicoConfig.class,(long) 1);
         Toast.makeText(this, "tel1:"+config.getTelefone1() + "tel2:"+config.getTelefone2() + "tel3:"+config.getTelefone3(), Toast.LENGTH_LONG).show();
 
+        // Enviar SMS
+        telefone1 = config.getTelefone1();
+        telefone2 = config.getTelefone2();
+        telefone3 = config.getTelefone3();
+
         // Habilitar GPS e Pegar Posição
         pedirPermissoes();
 
-        Double latPoint = minhaLocalizacao.getLatitude();
-        Double lngPoint = minhaLocalizacao.getLongitude();
-
-
-        // Enviar SMS
-        String telefone1 = config.getTelefone1();
-        String telefone2 = config.getTelefone2();
-        String telefone3 = config.getTelefone3();
-
-        String MensagemSMS = "ME AJUDEM!!! - Lat: "  + latPoint.toString() + "Log: " +lngPoint.toString();
-        SmsManager smgr = SmsManager.getDefault();
-        smgr.sendTextMessage(telefone1,null,MensagemSMS,null,null);
-        Toast.makeText(this, "SMS tel1:"+config.getTelefone1(), Toast.LENGTH_LONG).show();
-        smgr.sendTextMessage(telefone2,null,MensagemSMS,null,null);
-        Toast.makeText(this, "SMS tel2:"+config.getTelefone2() , Toast.LENGTH_LONG).show();
-        smgr.sendTextMessage(telefone3,null,MensagemSMS,null,null);
-        Toast.makeText(this, "SMS tel3:"+config.getTelefone3(), Toast.LENGTH_LONG).show();
 
         // Ligar
         Ligar(telefone1);
