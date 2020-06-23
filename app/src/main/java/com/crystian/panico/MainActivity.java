@@ -11,8 +11,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.telephony.PhoneStateListener;
 import android.telephony.SmsManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 import com.crystian.panico.R;
 import com.crystian.panico.model.PanicoConfig;
 
+
 public class MainActivity extends AppCompatActivity {
     Button btnGps;
     TextView txtLatitude, txtLongitude;
@@ -30,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     String telefone1 ;
     String telefone2 ;
     String telefone3;
+    TelephonyManager mTelephonyManager;
+    private MyPhoneCallListener mListener;
+    public static final int REQUEST_CODE = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,18 +45,67 @@ public class MainActivity extends AppCompatActivity {
 
         txtLatitude = (TextView) findViewById(R.id.txLatitude);
         txtLongitude = (TextView) findViewById(R.id.txLongitude);
-        minhaLocalizacao = new Location("");
+        // minhaLocalizacao = new Location("");
         btnGps = (Button) findViewById(R.id.btGPS);
         btnGps.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 pedirPermissoes();
             }
         });
+
+        // Create a telephony manager.
+        mTelephonyManager = (TelephonyManager)  getSystemService(TELEPHONY_SERVICE);
+        if (isTelephonyEnabled()) {
+            Log.d("TAG", "telephony_enabled");
+            checkForPhonePermission();
+            // Register the PhoneStateListener to monitor phone activity.
+            mListener = new MyPhoneCallListener();
+            mTelephonyManager.listen(mListener,
+                    PhoneStateListener.LISTEN_CALL_STATE);
+
+        } else {
+            Toast.makeText(this,
+                    "telephony_not_enabled",
+                    Toast.LENGTH_LONG).show();
+            Log.d("TAG","telephony_not_enabled");
+            // Disable the call button.
+           // disableCallButton();
+        }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isTelephonyEnabled()) {
+            mTelephonyManager.listen(mListener,
+                    PhoneStateListener.LISTEN_NONE);
+        }
+    }
 
+    private boolean isTelephonyEnabled() {
+        if (mTelephonyManager != null) {
+            if (mTelephonyManager.getSimState() ==
+                    TelephonyManager.SIM_STATE_READY) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    public void EnviaSMS2(View v) {
+    private void checkForPhonePermission() {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.CALL_PHONE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            // Permission not yet granted. Use requestPermissions().
+            Log.d("TAG", "permission_not_granted");
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{Manifest.permission.CALL_PHONE},
+//                    MY_PERMISSIONS_REQUEST_CALL_PHONE);
+        } else {
+            // Permission already granted.
+        }
+    }
+        public void EnviaSMS2(View v) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED
                  ) {
 
@@ -82,17 +138,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void Ligar(String telefone) {
-        String numero = telefone;
-        Uri uri = Uri.parse("tel:" + numero);
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.CALL_PHONE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            // Permission not yet granted. Use requestPermissions().
+            Log.d("TAG", "permission_not_granted");
+//            ActivityCompat.requestPermissions(this,
+//                    new String[]{Manifest.permission.CALL_PHONE},
+//                    MY_PERMISSIONS_REQUEST_CALL_PHONE);
+        } else {
+            String numero = telefone;
+            Uri uri = Uri.parse("tel:" + numero);
 
-        Intent intent = new Intent(Intent.ACTION_CALL, uri);
-        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.CALL_PHONE},1);
-            return;
+            Intent intent = new Intent(Intent.ACTION_CALL, uri);
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.CALL_PHONE},1);
+                return;
+            }
+            Integer requestResult;
+            //startActivityForResult(intent,requestResult);
+            startActivityForResult(intent, REQUEST_CODE);
         }
-        startActivity(intent);
 
-    }
+           }
 
 
     private void pedirPermissoes() {
@@ -196,6 +264,65 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Ligou tel3:"+config.getTelefone3(), Toast.LENGTH_LONG).show();
 
     }
+
+
+    private class MyPhoneCallListener extends PhoneStateListener {
+        private boolean returningFromOffHook = false;
+
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+            // Define a string for the message to use in a toast.
+            String message = "Status Fone";//getString(R.string.phone_status);
+            switch (state) {
+                case TelephonyManager.CALL_STATE_RINGING:
+                    // Incoming call is ringing
+                    message = message +
+                            "Tocando" + incomingNumber;
+                    Toast.makeText(MainActivity.this,"Tocando",
+                            Toast.LENGTH_SHORT).show();
+                    Log.i("TAG", message);
+
+                    break;
+                case TelephonyManager.CALL_STATE_OFFHOOK:
+                    // Phone call is active -- off the hook
+                    message = message + "Em Ligação";
+                    Toast.makeText(MainActivity.this, "Em Ligacao",
+                            Toast.LENGTH_SHORT).show();
+                    Log.i("TAG", message);
+                    returningFromOffHook = true;
+                    break;
+                case TelephonyManager.CALL_STATE_IDLE:
+                    // Phone is idle before and after phone call.
+                    // If running on version older than 19 (KitKat),
+                    // restart activity when phone call ends.
+                    message = message + "Telefone Disponivel";
+                    Toast.makeText(MainActivity.this, "telefone Disponivel",
+                            Toast.LENGTH_SHORT).show();
+                    Log.i("TAG", message);
+
+                    if (returningFromOffHook) {
+                        // No need to do anything if >= version K
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+                            Log.i("TAG", "getString(R.string.restarting_app)");
+                            // Restart the app.
+//                            Intent intent = getPackageManager()
+//                                    .getLaunchIntentForPackage(
+//                                    .getPackageName());
+                            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            //startActivity(i);
+                        }
+                    }
+                    break;
+                default:
+                    message = message + "Phone off";
+                    Toast.makeText(MainActivity.this, message,
+                            Toast.LENGTH_SHORT).show();
+                    Log.i("TAG", message);
+                    break;
+            }
+        }
+    }
+
 
 
 }
