@@ -83,13 +83,12 @@
         app:layout_constraintTop_toBottomOf="@+id/txLatitude" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btPanico"
         android:layout_width="179dp"
         android:layout_height="172dp"
         android:layout_marginEnd="36dp"
         android:layout_marginRight="36dp"
         android:background="@drawable/panic_button"
-        android:onClick="AcionaBotaoPanico"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

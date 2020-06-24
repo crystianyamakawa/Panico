@@ -17,6 +17,7 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,7 +29,7 @@ import com.crystian.panico.model.PanicoConfig;
 
 
 public class MainActivity extends AppCompatActivity {
-    Button btnGps;
+    Button btnGps, btnPanico;
     TextView txtLatitude, txtLongitude;
     Location minhaLocalizacao ;
     String telefone1 ;
@@ -51,6 +52,38 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 pedirPermissoes();
             }
+        });
+
+        btnPanico = (Button) findViewById(R.id.btPanico);
+
+        btnPanico.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("TOUCH", "entrou touch");
+                Boolean botaoApertado = false;
+                long inicio;
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    botaoApertado = true;
+                    inicio = System.currentTimeMillis();
+
+                    while (System.currentTimeMillis() == (inicio += 1000) && (botaoApertado)) {
+                        Log.d("TOUCH", "lOOP TEMPO");
+                    }
+                    //AcionaBotaoPanico();
+                    Log.d("TOUCH", "SAIU lOOP TEMPO");
+
+
+                } else {
+                    if (event.getAction() == MotionEvent.ACTION_UP) {
+                        botaoApertado = false;
+                        inicio = 0;
+
+                    }
+                }
+                return true;
+            }
+
         });
 
         // Create a telephony manager.
@@ -242,7 +275,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void AcionaBotaoPanico(View v){
+    public void AcionaBotaoPanico(){
+
+
         PanicoConfig config = PanicoConfig.findById(PanicoConfig.class,(long) 1);
         Toast.makeText(this, "tel1:"+config.getTelefone1() + "tel2:"+config.getTelefone2() + "tel3:"+config.getTelefone3(), Toast.LENGTH_LONG).show();
 
@@ -322,6 +357,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 
 
 
