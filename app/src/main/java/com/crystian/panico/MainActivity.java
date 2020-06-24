@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
     TelephonyManager mTelephonyManager;
     private MyPhoneCallListener mListener;
     public static final int REQUEST_CODE = 1;
-
+    private long inicio = 0;
+    private long termino = 0;
+    public Boolean botaoAcionado = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,31 +58,30 @@ public class MainActivity extends AppCompatActivity {
 
         btnPanico = (Button) findViewById(R.id.btPanico);
 
+
         btnPanico.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.d("TOUCH", "entrou touch");
                 Boolean botaoApertado = false;
-                long inicio;
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    botaoApertado = true;
-                    inicio = System.currentTimeMillis();
+                    //botaoApertado = true;
+                    inicio = event.getEventTime();
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        //botaoApertado = false;
+                        termino = event.getEventTime();
 
-                    while (System.currentTimeMillis() == (inicio += 1000) && (botaoApertado)) {
-                        Log.d("TOUCH", "lOOP TEMPO");
-                    }
-                    //AcionaBotaoPanico();
-                    Log.d("TOUCH", "SAIU lOOP TEMPO");
-
-
-                } else {
-                    if (event.getAction() == MotionEvent.ACTION_UP) {
-                        botaoApertado = false;
-                        inicio = 0;
-
-                    }
                 }
+                if (termino - inicio> 15000){
+                    Log.d("TOUCH", "Maior que 15'");
+                    //AcionaBotaoPanico();
+                    // set flag botao apertado
+                }else {
+                    Log.d("TOUCH", "Menor que 15'");
+                    inicio = 0;
+                    termino = 0;
+                }
+
                 return true;
             }
 
@@ -277,9 +278,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void AcionaBotaoPanico(){
 
+        botaoAcionado = true;
 
         PanicoConfig config = PanicoConfig.findById(PanicoConfig.class,(long) 1);
-        Toast.makeText(this, "tel1:"+config.getTelefone1() + "tel2:"+config.getTelefone2() + "tel3:"+config.getTelefone3(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "tel1:"+config.getTelefone1() + "tel2:"+config.getTelefone2() + "tel3:"+config.getTelefone3(), Toast.LENGTH_LONG).show();
 
         // Enviar SMS
         telefone1 = config.getTelefone1();
@@ -293,10 +295,6 @@ public class MainActivity extends AppCompatActivity {
         // Ligar
         Ligar(telefone1);
         Toast.makeText(this, "Ligou tel1:"+config.getTelefone1(), Toast.LENGTH_LONG).show();
-        Ligar(telefone2);
-        Toast.makeText(this, "Ligou tel2:"+config.getTelefone2(), Toast.LENGTH_LONG).show();
-        Ligar(telefone3);
-        Toast.makeText(this, "Ligou tel3:"+config.getTelefone3(), Toast.LENGTH_LONG).show();
 
     }
 
@@ -310,42 +308,26 @@ public class MainActivity extends AppCompatActivity {
             String message = "Status Fone";//getString(R.string.phone_status);
             switch (state) {
                 case TelephonyManager.CALL_STATE_RINGING:
-                    // Incoming call is ringing
-                    message = message +
-                            "Tocando" + incomingNumber;
-                    Toast.makeText(MainActivity.this,"Tocando",
-                            Toast.LENGTH_SHORT).show();
-                    Log.i("TAG", message);
-
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
-                    // Phone call is active -- off the hook
-                    message = message + "Em Ligação";
-                    Toast.makeText(MainActivity.this, "Em Ligacao",
-                            Toast.LENGTH_SHORT).show();
-                    Log.i("TAG", message);
                     returningFromOffHook = true;
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
-                    // Phone is idle before and after phone call.
-                    // If running on version older than 19 (KitKat),
-                    // restart activity when phone call ends.
-                    message = message + "Telefone Disponivel";
-                    Toast.makeText(MainActivity.this, "telefone Disponivel",
-                            Toast.LENGTH_SHORT).show();
-                    Log.i("TAG", message);
 
                     if (returningFromOffHook) {
-                        // No need to do anything if >= version K
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-                            Log.i("TAG", "getString(R.string.restarting_app)");
-                            // Restart the app.
-//                            Intent intent = getPackageManager()
-//                                    .getLaunchIntentForPackage(
-//                                    .getPackageName());
-                            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            //startActivity(i);
-                        }
+                     if (botaoAcionado){
+                         // ligar proximo numero
+                     }
+//                        // No need to do anything if >= version K
+//                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+//                            Log.i("TAG", "getString(R.string.restarting_app)");
+//                            // Restart the app.
+////                            Intent intent = getPackageManager()
+////                                    .getLaunchIntentForPackage(
+////                                    .getPackageName());
+//                            //i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                            //startActivity(i);
+//                        }
                     }
                     break;
                 default:
