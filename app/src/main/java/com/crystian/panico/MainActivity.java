@@ -27,6 +27,8 @@ import android.widget.Toast;
 import com.crystian.panico.R;
 import com.crystian.panico.model.PanicoConfig;
 
+import java.util.concurrent.TimeUnit;
+
 
 public class MainActivity extends AppCompatActivity {
     Button btnGps, btnPanico;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private long inicio = 0;
     private long termino = 0;
     public Boolean botaoAcionado = false;
+    public PanicoConfig config;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,40 +51,35 @@ public class MainActivity extends AppCompatActivity {
 
         txtLatitude = (TextView) findViewById(R.id.txLatitude);
         txtLongitude = (TextView) findViewById(R.id.txLongitude);
-        // minhaLocalizacao = new Location("");
-        btnGps = (Button) findViewById(R.id.btGPS);
-        btnGps.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                pedirPermissoes();
-            }
-        });
+// minhaLocalizacao = new Location("");
+//        btnGps = (Button) findViewById(R.id.btGPS);
+//        btnGps.setOnClickListener(new Button.OnClickListener() {
+//            public void onClick(View v) {
+//                pedirPermissoes();
+//            }
+//        });
 
         btnPanico = (Button) findViewById(R.id.btPanico);
-
-
         btnPanico.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Boolean botaoApertado = false;
-
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    //botaoApertado = true;
-                    inicio = event.getEventTime();
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                        //botaoApertado = false;
-                        termino = event.getEventTime();
-
-                }
-                if (termino - inicio> 15000){
-                    Log.d("TOUCH", "Maior que 15'");
-                    //AcionaBotaoPanico();
-                    // set flag botao apertado
-                }else {
-                    Log.d("TOUCH", "Menor que 15'");
-                    inicio = 0;
+                    inicio = 	System.currentTimeMillis();
                     termino = 0;
-                }
+                    Log.d("TOUCH", "INICIO'  " +  inicio);
 
+
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        termino = 	System.currentTimeMillis();
+                    Log.d("TOUCH", "TERMINO'  " + termino);
+                }
+                if ((termino - inicio)> 5000){
+                    //Caso o botão fique apertado por 15s dispara evento de panico
+                    AcionaBotaoPanico();
+                }else if (termino>0){
+                    Toast.makeText(MainActivity.this, "ATENÇÃO - Para Ativar o Alerta de Pânico, Mantenha o Botão Pressionado por 5 segundos", Toast.LENGTH_SHORT).show();
+                    Log.d("TOUCH", "Menor que 15'" +  (termino - inicio));
+                }
                 return true;
             }
 
@@ -90,21 +88,20 @@ public class MainActivity extends AppCompatActivity {
         // Create a telephony manager.
         mTelephonyManager = (TelephonyManager)  getSystemService(TELEPHONY_SERVICE);
         if (isTelephonyEnabled()) {
-            Log.d("TAG", "telephony_enabled");
+//            Log.d("TAG", "telephony_enabled");
             checkForPhonePermission();
             // Register the PhoneStateListener to monitor phone activity.
             mListener = new MyPhoneCallListener();
-            mTelephonyManager.listen(mListener,
-                    PhoneStateListener.LISTEN_CALL_STATE);
-
-        } else {
-            Toast.makeText(this,
-                    "telephony_not_enabled",
-                    Toast.LENGTH_LONG).show();
-            Log.d("TAG","telephony_not_enabled");
-            // Disable the call button.
-           // disableCallButton();
-        }
+            mTelephonyManager.listen(mListener, PhoneStateListener.LISTEN_CALL_STATE);
+//        }
+//        else {
+//            Toast.makeText(this,
+//                    "telephony_not_enabled",
+//                    Toast.LENGTH_LONG).show();
+//            Log.d("TAG","telephony_not_enabled");
+//            // Disable the call button.
+//           // disableCallButton();
+       }
     }
 
     @Override
@@ -234,17 +231,22 @@ public class MainActivity extends AppCompatActivity {
                     Double latPoint = minhaLocalizacao.getLatitude();
                     Double lngPoint = minhaLocalizacao.getLongitude();
 
-
-                    String MensagemSMS = "ME AJUDEM!!! - Lat: "  + latPoint.toString() + "Log: " +lngPoint.toString();
-                    SmsManager smgr = SmsManager.getDefault();
-                    smgr.sendTextMessage(telefone1,null,MensagemSMS,null,null);
-                   // Toast.makeText(this, "SMS tel1:"+ telefone1.toString(), Toast.LENGTH_LONG).show();
-                    smgr.sendTextMessage(telefone2,null,MensagemSMS,null,null);
-                   // Toast.makeText(this, "SMS tel2:" + telefone2.toString() , Toast.LENGTH_LONG).show();
-                    smgr.sendTextMessage(telefone3,null,MensagemSMS,null,null);
-                   // Toast.makeText(this, "SMS tel3:"+telefone3.toString() , Toast.LENGTH_LONG).show();
-
-
+                    if (botaoAcionado) {
+                        String MensagemSMS = "ME AJUDEM!!! - Lat: " + latPoint.toString() + "Log: " + lngPoint.toString();
+                        SmsManager smgr = SmsManager.getDefault();
+                        if (config.getTelefone1_sms()) {
+                            smgr.sendTextMessage(config.getTelefone1(), null, MensagemSMS, null, null);
+                            // Toast.makeText(this, "SMS tel1:"+ telefone1.toString(), Toast.LENGTH_LONG).show();
+                        }
+                        if (config.getTelefone2_sms()) {
+                            smgr.sendTextMessage(config.getTelefone2(), null, MensagemSMS, null, null);
+                            // Toast.makeText(this, "SMS tel2:" + telefone2.toString() , Toast.LENGTH_LONG).show();
+                        }
+                        if (config.getTelefone3_sms()) {
+                            smgr.sendTextMessage(config.getTelefone3(), null, MensagemSMS, null, null);
+                            // Toast.makeText(this, "SMS tel3:"+telefone3.toString() , Toast.LENGTH_LONG).show();
+                        }
+                    }
 
                 }
 
@@ -277,25 +279,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void AcionaBotaoPanico(){
-
         botaoAcionado = true;
+        try {
+            PanicoConfig config = PanicoConfig.findById(PanicoConfig.class,(long) 1);
+            //Toast.makeText(this, "tel1:"+config.getTelefone1() + "tel2:"+config.getTelefone2() + "tel3:"+config.getTelefone3(), Toast.LENGTH_LONG).show();
 
-        PanicoConfig config = PanicoConfig.findById(PanicoConfig.class,(long) 1);
-        //Toast.makeText(this, "tel1:"+config.getTelefone1() + "tel2:"+config.getTelefone2() + "tel3:"+config.getTelefone3(), Toast.LENGTH_LONG).show();
+     //       while(botaoAcionado){
 
-        // Enviar SMS
-        telefone1 = config.getTelefone1();
-        telefone2 = config.getTelefone2();
-        telefone3 = config.getTelefone3();
+                // Habilitar GPS e Pegar Posição e envia SMS
+                pedirPermissoes();
 
-        // Habilitar GPS e Pegar Posição
-        pedirPermissoes();
+                // Ligar
+                Ligar(config.getTelefone1());
+                //        Toast.makeText(this, "Ligou tel1:"+config.getTelefone1(), Toast.LENGTH_LONG).show();
 
-
-        // Ligar
-        Ligar(telefone1);
-        Toast.makeText(this, "Ligou tel1:"+config.getTelefone1(), Toast.LENGTH_LONG).show();
-
+   //             Thread.sleep(900000); //espera por  15 minutos
+ //           }
+        } catch (Exception e) {
+            //e.printStackTrace();
+            Toast.makeText(this, "Atualize o Cadastro de Contatos", Toast.LENGTH_LONG).show();
+            //chamarConfig();
+            return;
+        }
     }
 
 
