@@ -51,13 +51,13 @@ public class MainActivity extends AppCompatActivity {
 
         txtLatitude = (TextView) findViewById(R.id.txLatitude);
         txtLongitude = (TextView) findViewById(R.id.txLongitude);
-// minhaLocalizacao = new Location("");
-//        btnGps = (Button) findViewById(R.id.btGPS);
-//        btnGps.setOnClickListener(new Button.OnClickListener() {
-//            public void onClick(View v) {
-//                pedirPermissoes();
-//            }
-//        });
+        minhaLocalizacao = new Location("");
+        btnGps = (Button) findViewById(R.id.btGPS);
+        btnGps.setOnClickListener(new Button.OnClickListener() {
+            public void onClick(View v) {
+               pedirPermissoes();
+            }
+        });
 
         btnPanico = (Button) findViewById(R.id.btPanico);
         btnPanico.setOnTouchListener(new View.OnTouchListener() {
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
             }
             Integer requestResult;
             //startActivityForResult(intent,requestResult);
-            startActivityForResult(intent, REQUEST_CODE);
+            startActivity(intent);
         }
 
            }
@@ -231,22 +231,22 @@ public class MainActivity extends AppCompatActivity {
                     Double latPoint = minhaLocalizacao.getLatitude();
                     Double lngPoint = minhaLocalizacao.getLongitude();
 
-                    if (botaoAcionado) {
-                        String MensagemSMS = "ME AJUDEM!!! - Lat: " + latPoint.toString() + "Log: " + lngPoint.toString();
-                        SmsManager smgr = SmsManager.getDefault();
-                        if (config.getTelefone1_sms()) {
-                            smgr.sendTextMessage(config.getTelefone1(), null, MensagemSMS, null, null);
-                            // Toast.makeText(this, "SMS tel1:"+ telefone1.toString(), Toast.LENGTH_LONG).show();
-                        }
-                        if (config.getTelefone2_sms()) {
-                            smgr.sendTextMessage(config.getTelefone2(), null, MensagemSMS, null, null);
-                            // Toast.makeText(this, "SMS tel2:" + telefone2.toString() , Toast.LENGTH_LONG).show();
-                        }
-                        if (config.getTelefone3_sms()) {
-                            smgr.sendTextMessage(config.getTelefone3(), null, MensagemSMS, null, null);
-                            // Toast.makeText(this, "SMS tel3:"+telefone3.toString() , Toast.LENGTH_LONG).show();
-                        }
-                    }
+//                    if (botaoAcionado) {
+//                        String MensagemSMS = "ME AJUDEM!!! - Lat: " + latPoint.toString() + "Log: " + lngPoint.toString();
+//                        SmsManager smgr = SmsManager.getDefault();
+//                        if (config.getTelefone1_sms()) {
+//                            smgr.sendTextMessage(config.getTelefone1(), null, MensagemSMS, null, null);
+//                            // Toast.makeText(this, "SMS tel1:"+ telefone1.toString(), Toast.LENGTH_LONG).show();
+//                        }
+//                        if (config.getTelefone2_sms()) {
+//                            smgr.sendTextMessage(config.getTelefone2(), null, MensagemSMS, null, null);
+//                            // Toast.makeText(this, "SMS tel2:" + telefone2.toString() , Toast.LENGTH_LONG).show();
+//                        }
+//                        if (config.getTelefone3_sms()) {
+//                            smgr.sendTextMessage(config.getTelefone3(), null, MensagemSMS, null, null);
+//                            // Toast.makeText(this, "SMS tel3:"+telefone3.toString() , Toast.LENGTH_LONG).show();
+//                        }
+//                    }
 
                 }
 

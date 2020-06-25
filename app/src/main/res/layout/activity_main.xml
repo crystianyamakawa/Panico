@@ -24,7 +24,7 @@
         android:layout_height="46dp"
         android:layout_marginStart="28dp"
         android:layout_marginLeft="28dp"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="256dp"
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,22 +47,24 @@
         android:id="@+id/btSMS2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="12dp"
         android:onClick="EnviaSMS2"
         android:text="SMS"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btLigar" />
+        app:layout_constraintStart_toEndOf="@+id/btLigar"
+        app:layout_constraintTop_toBottomOf="@+id/txTelefone" />
 
     <Button
         android:id="@+id/btGPS"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
         android:text="GPS"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btSMS2" />
+        app:layout_constraintStart_toEndOf="@+id/btSMS2"
+        app:layout_constraintTop_toBottomOf="@+id/txTelefone" />
 
     <TextView
         android:id="@+id/txLatitude"
@@ -93,7 +95,8 @@
         android:background="@drawable/panic_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.167" />
+        app:layout_constraintVertical_bias="0.114" />
 </androidx.constraintlayout.widget.ConstraintLayout>
