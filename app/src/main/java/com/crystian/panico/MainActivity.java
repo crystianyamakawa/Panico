@@ -33,7 +33,6 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
     Button btnGps, btnPanico;
     TextView txtLatitude, txtLongitude;
-    Location minhaLocalizacao ;
     String telefone1 ;
     String telefone2 ;
     String telefone3;
@@ -42,23 +41,14 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_CODE = 1;
     private long inicio = 0;
     private long termino = 0;
-    public Boolean botaoAcionado = false;
+    public Boolean botaoAcionado,enviarSMS = false;
     public PanicoConfig config;
+    int ALL_PERMISSIONS = 101;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        txtLatitude = (TextView) findViewById(R.id.txLatitude);
-        txtLongitude = (TextView) findViewById(R.id.txLongitude);
-        minhaLocalizacao = new Location("");
-        btnGps = (Button) findViewById(R.id.btGPS);
-        btnGps.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-               pedirPermissoes();
-            }
-        });
-
+        solicitaPermissao();
         btnPanico = (Button) findViewById(R.id.btPanico);
         btnPanico.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -136,37 +126,9 @@ public class MainActivity extends AppCompatActivity {
             // Permission already granted.
         }
     }
-        public void EnviaSMS2(View v) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED
-                 ) {
 
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 1);
-        }
-        else {
-            try {
-                EditText telefone = (EditText) findViewById(R.id.txTelefone);
-                SmsManager smgr = SmsManager.getDefault();
-                smgr.sendTextMessage(telefone.getText().toString(), null, "Teste Envio", null, null);
-                Toast.makeText(MainActivity.this, "SMS Sent Successfully", Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                Toast.makeText(MainActivity.this, "SMS Failed to Send, Please try again", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 
-    public void TesteLigar(View v) {
-        EditText txTelefone = (EditText) findViewById(R.id.txTelefone);
-        String numero = txTelefone.getText().toString();
-        Uri uri = Uri.parse("tel:" + numero);
 
-        Intent intent = new Intent(Intent.ACTION_CALL, uri);
-        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.CALL_PHONE},1);
-            return;
-        }
-        startActivity(intent);
-
-    }
 
     public void Ligar(String telefone) {
         if (ActivityCompat.checkSelfPermission(this,
@@ -194,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
            }
 
 
-    private void pedirPermissoes() {
+    private void pedirPermissoesGPS() {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -202,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
         else
-            configurarServico();
+            ativaServicoGPS();
     }
 
     @Override
@@ -211,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    configurarServico();
+                    ativaServicoGPS();
                 } else {
                     Toast.makeText(this, "Não vai funcionar!!!", Toast.LENGTH_LONG).show();
                 }
@@ -219,34 +181,34 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    public void configurarServico(){
+    public void ativaServicoGPS(){
         try {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
             LocationListener locationListener = new LocationListener() {
                 public void onLocationChanged(Location location) {
-                    atualizar(location);
-                    minhaLocalizacao = location;
+                    Location minhaLocalizacao = location;
 
                     Double latPoint = minhaLocalizacao.getLatitude();
                     Double lngPoint = minhaLocalizacao.getLongitude();
 
-//                    if (botaoAcionado) {
-//                        String MensagemSMS = "ME AJUDEM!!! - Lat: " + latPoint.toString() + "Log: " + lngPoint.toString();
-//                        SmsManager smgr = SmsManager.getDefault();
-//                        if (config.getTelefone1_sms()) {
-//                            smgr.sendTextMessage(config.getTelefone1(), null, MensagemSMS, null, null);
-//                            // Toast.makeText(this, "SMS tel1:"+ telefone1.toString(), Toast.LENGTH_LONG).show();
-//                        }
-//                        if (config.getTelefone2_sms()) {
-//                            smgr.sendTextMessage(config.getTelefone2(), null, MensagemSMS, null, null);
-//                            // Toast.makeText(this, "SMS tel2:" + telefone2.toString() , Toast.LENGTH_LONG).show();
-//                        }
-//                        if (config.getTelefone3_sms()) {
-//                            smgr.sendTextMessage(config.getTelefone3(), null, MensagemSMS, null, null);
-//                            // Toast.makeText(this, "SMS tel3:"+telefone3.toString() , Toast.LENGTH_LONG).show();
-//                        }
-//                    }
+                    if (enviarSMS) {
+                        String MensagemSMS = "ALERTA DE PANICO POR FAVOR AJUDEM!!! http://maps.google.com/maps?q=" + latPoint.toString() + "," + lngPoint.toString();
+                        SmsManager smgr = SmsManager.getDefault();
+                        if (config.getTelefone1_sms()) {
+                            smgr.sendTextMessage(config.getTelefone1(), null, MensagemSMS, null, null);
+                            // Toast.makeText(this, "SMS tel1:"+ telefone1.toString(), Toast.LENGTH_LONG).show();
+                        }
+                        if (config.getTelefone2_sms()) {
+                            smgr.sendTextMessage(config.getTelefone2(), null, MensagemSMS, null, null);
+                            // Toast.makeText(this, "SMS tel2:" + telefone2.toString() , Toast.LENGTH_LONG).show();
+                        }
+                        if (config.getTelefone3_sms()) {
+                           smgr.sendTextMessage(config.getTelefone3(), null, MensagemSMS, null, null);
+                            // Toast.makeText(this, "SMS tel3:"+telefone3.toString() , Toast.LENGTH_LONG).show();
+                        }
+                        enviarSMS = false;
+                    }
 
                 }
 
@@ -262,16 +224,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void atualizar(Location location)
-    {
-
-        Double latPoint = location.getLatitude();
-        Double lngPoint = location.getLongitude();
-
-        txtLatitude.setText(latPoint.toString());
-        txtLongitude.setText(lngPoint.toString());
-    }
-
     public void chamarConfig(View view){
         Intent intent = new Intent(this, ConfigActivity.class);
         startActivity(intent);
@@ -280,26 +232,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void AcionaBotaoPanico(){
         botaoAcionado = true;
-        try {
-            PanicoConfig config = PanicoConfig.findById(PanicoConfig.class,(long) 1);
+        enviarSMS = true;
+        config = PanicoConfig.findById(PanicoConfig.class,(long) 1);
+            if (config!=null){
             //Toast.makeText(this, "tel1:"+config.getTelefone1() + "tel2:"+config.getTelefone2() + "tel3:"+config.getTelefone3(), Toast.LENGTH_LONG).show();
-
      //       while(botaoAcionado){
-
                 // Habilitar GPS e Pegar Posição e envia SMS
-                pedirPermissoes();
-
+                pedirPermissoesGPS();
                 // Ligar
                 Ligar(config.getTelefone1());
                 //        Toast.makeText(this, "Ligou tel1:"+config.getTelefone1(), Toast.LENGTH_LONG).show();
-
    //             Thread.sleep(900000); //espera por  15 minutos
- //           }
-        } catch (Exception e) {
-            //e.printStackTrace();
-            Toast.makeText(this, "Atualize o Cadastro de Contatos", Toast.LENGTH_LONG).show();
-            //chamarConfig();
-            return;
+            } else{
+                Toast.makeText(this, "Atualize o Cadastro de Contatos", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this, ConfigActivity.class);
+                startActivity(intent);
+                //return;
         }
     }
 
@@ -345,7 +293,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void solicitaPermissao(){
+        final String[] permissions = new String[]{Manifest.permission.CAMERA,
+                Manifest.permission.CALL_PHONE, Manifest.permission.SEND_SMS,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION};
+              ActivityCompat.requestPermissions(this, permissions, ALL_PERMISSIONS);
 
+    }
 
 
 }
