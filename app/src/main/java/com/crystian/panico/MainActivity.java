@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     public Boolean botaoAcionado,enviarSMS = false;
     public PanicoConfig config;
     int ALL_PERMISSIONS = 101;
+    public int proximaLigacao;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -241,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
                 pedirPermissoesGPS();
                 // Ligar
                 Ligar(config.getTelefone1());
+                proximaLigacao = 2;
                 //        Toast.makeText(this, "Ligou tel1:"+config.getTelefone1(), Toast.LENGTH_LONG).show();
    //             Thread.sleep(900000); //espera por  15 minutos
             } else{
@@ -269,7 +271,16 @@ public class MainActivity extends AppCompatActivity {
 
                     if (returningFromOffHook) {
                      if (botaoAcionado){
-                         // ligar proximo numero
+                         if (proximaLigacao == 1){
+                             Ligar(config.getTelefone1());
+                             proximaLigacao = 2;
+                         }else if (proximaLigacao == 2){
+                             Ligar(config.getTelefone2());
+                             proximaLigacao = 3;
+                         }else if (proximaLigacao == 3){
+                             Ligar(config.getTelefone3());
+                             proximaLigacao = 0;
+                         }
                      }
 //                        // No need to do anything if >= version K
 //                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
