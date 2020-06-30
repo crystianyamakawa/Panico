@@ -23,7 +23,7 @@
         android:id="@+id/btPanico"
         android:layout_width="301dp"
         android:layout_height="300dp"
-        android:background="@drawable/panic_button"
+        android:background="@drawable/perigo2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

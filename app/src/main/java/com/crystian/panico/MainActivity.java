@@ -272,16 +272,23 @@ public class MainActivity extends AppCompatActivity {
                     if (returningFromOffHook) {
                      if (botaoAcionado){
                          if (proximaLigacao == 1){
-                             Ligar(config.getTelefone1());
+                             if (config.getTelefone1_ligar()) {
+                                 Ligar(config.getTelefone1());
+                             }
                              proximaLigacao = 2;
                          }else if (proximaLigacao == 2){
-                             Ligar(config.getTelefone2());
+                             if (config.getTelefone2_ligar()) {
+                                 Ligar(config.getTelefone2());
+                             }
                              proximaLigacao = 3;
                          }else if (proximaLigacao == 3){
-                             Ligar(config.getTelefone3());
+                             if (config.getTelefone3_ligar()) {
+                                 Ligar(config.getTelefone3());
+                             }
                              proximaLigacao = 0;
                          }
                      }
+
 //                        // No need to do anything if >= version K
 //                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
 //                            Log.i("TAG", "getString(R.string.restarting_app)");
