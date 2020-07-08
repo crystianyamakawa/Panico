@@ -7,6 +7,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    btnPanico.setBackground(Drawable.createFromPath("@drawable/panic_button"));
+                    btnPanico.setBackground(getResources().getDrawable(R.drawable.panico_yellow));
                     inicio = 	System.currentTimeMillis();
                     termino = 0;
                     Log.d("TOUCH", "INICIO'  " +  inicio);
@@ -62,10 +66,14 @@ public class MainActivity extends AppCompatActivity {
 
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                         termino = 	System.currentTimeMillis();
+                    //btnPanico.setBackgroundColor(null);
+                    btnPanico.setBackground(getResources().getDrawable(R.drawable.panico_green));
+
                     Log.d("TOUCH", "TERMINO'  " + termino);
                 }
                 if ((termino - inicio)> 5000){
                     //Caso o botão fique apertado por 15s dispara evento de panico
+                    btnPanico.setBackground(getResources().getDrawable(R.drawable.panico_red));
                     AcionaBotaoPanico();
                 }else if (termino>0){
                     Toast.makeText(MainActivity.this, "ATENÇÃO - Para Ativar o Alerta de Pânico, Mantenha o Botão Pressionado por 5 segundos", Toast.LENGTH_SHORT).show();
